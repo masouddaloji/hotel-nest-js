@@ -1,21 +1,18 @@
 // use prisma-8
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.UpdatedAtString
+enum UserRole {
+  CUSTOMER
+  HOTEL_MANAGER
+  ADMIN
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.UpdatedAtString
+model User {
+  id String @id @onCreate(uuid())
+  email String @unique
+  name  String
+  passwordHash String
+  role UserRole @default(CUSTOMER)
+  isActive Boolean @default(true)
+ createdAt TimestamptzString   @default(now())
+  updatedAt TimestamptzString   @onCreate(now()) @onUpdate(now())
 }
